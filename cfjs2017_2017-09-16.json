@@ -1,0 +1,145 @@
+{
+  "@timestamp": "2017-09-16T15:03:27.008558",
+  "dev10": {
+    "dialup_device": {
+      "last_reset": 16403.0,
+      "signal_quality": 96.77
+    },
+    "wlan_ap_scan_force": {
+      "7": 0,
+      "5": 0,
+      "8": 0,
+      "13": 1,
+      "11": 4,
+      "10": 0,
+      "12": 0,
+      "4": 0,
+      "3": 0,
+      "6": 5,
+      "9": 0,
+      "2": 1,
+      "1": 3
+    },
+    "wlan_air_time_occupancy": {
+      "2g": {
+        "busy": 12.7,
+        "other": 3.7,
+        "rx": 9.0,
+        "tx": 0.0
+      },
+      "5g": {
+        "busy": 0.9,
+        "other": 0.1,
+        "rx": 0.0,
+        "tx": 0.8
+      }
+    },
+    "wlan_client_count": {
+      "2g": {
+        "cfjs2017": 0
+      },
+      "5g": {
+        "cfjs2017": 0,
+        "cfjs2017_5g": 0
+      }
+    },
+    "interface": {
+      "wlan6": {
+        "in_unknown_protos": 0,
+        "in_octets": 0,
+        "oerrs": 0,
+        "opkts": 0,
+        "out_discards": 0,
+        "ipkts": 0,
+        "out_octets": 0,
+        "ierrs": 0,
+        "in_drops": 0,
+        "colls": 0
+      },
+      "wlan0": {
+        "in_unknown_protos": 0,
+        "in_octets": 0,
+        "oerrs": 0,
+        "opkts": 0,
+        "out_discards": 10,
+        "ipkts": 0,
+        "out_octets": 808,
+        "ierrs": 0,
+        "in_drops": 0,
+        "colls": 0
+      },
+      "wlan3": {
+        "in_unknown_protos": 0,
+        "in_octets": 0,
+        "oerrs": 0,
+        "opkts": 0,
+        "out_discards": 0,
+        "ipkts": 0,
+        "out_octets": 0,
+        "ierrs": 0,
+        "in_drops": 0,
+        "colls": 0
+      },
+      "wlan4": {
+        "in_unknown_protos": 0,
+        "in_octets": 0,
+        "oerrs": 0,
+        "opkts": 0,
+        "out_discards": 10,
+        "ipkts": 0,
+        "out_octets": 808,
+        "ierrs": 0,
+        "in_drops": 0,
+        "colls": 0
+      },
+      "wlan2": {
+        "in_unknown_protos": 0,
+        "in_octets": 0,
+        "oerrs": 0,
+        "opkts": 0,
+        "out_discards": 0,
+        "ipkts": 0,
+        "out_octets": 0,
+        "ierrs": 0,
+        "in_drops": 0,
+        "colls": 0
+      },
+      "wlan5": {
+        "in_unknown_protos": 0,
+        "in_octets": 0,
+        "oerrs": 0,
+        "opkts": 0,
+        "out_discards": 10,
+        "ipkts": 0,
+        "out_octets": 808,
+        "ierrs": 0,
+        "in_drops": 0,
+        "colls": 0
+      },
+      "wlan1": {
+        "in_unknown_protos": 0,
+        "in_octets": 0,
+        "oerrs": 0,
+        "opkts": 0,
+        "out_discards": 0,
+        "ipkts": 0,
+        "out_octets": 0,
+        "ierrs": 0,
+        "in_drops": 0,
+        "colls": 0
+      },
+      "wlan7": {
+        "in_unknown_protos": 0,
+        "in_octets": 0,
+        "oerrs": 0,
+        "opkts": 0,
+        "out_discards": 0,
+        "ipkts": 0,
+        "out_octets": 0,
+        "ierrs": 0,
+        "in_drops": 0,
+        "colls": 0
+      }
+    }
+  }
+}
