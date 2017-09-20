@@ -10,14 +10,20 @@ Day: 2017-09- /
 <input type="radio" name="field" value="24">24</input>
 </form>
 
-<form name="metrics" onchange="refresh()">
-Metrics: 
-<input type="radio" name="field" value="wwan" checked>wwan</input>
-<input type="radio" name="field" value="signal_quality">signal_quality</input>
-<input type="radio" name="field" value="wlan2g">wlan2g</input>
-<input type="radio" name="field" value="wlan5g">wlan5g</input>
-<input type="radio" name="field" value="clients">clients</input>
-</form>
+<table>
+<tr>
+	<td><svg height="300" width="700" id="p0"></svg></td>
+	<td><svg height="300" width="700" id="p1"></svg></td>
+</tr>
+<tr>
+	<td><svg height="300" width="700" id="p2"></svg></td>
+	<td><svg height="300" width="700" id="p3"></svg></td>
+</tr>
+<tr>
+	<td><svg height="300" width="700" id="p4"></svg></td>
+	<td><svg height="300" width="700" id="p5"></svg></td>
+</tr>
+</table>
 
 <style>
 .line {
@@ -27,7 +33,6 @@ Metrics:
 }
 </style>
 
-<svg width="900" height="500"></svg>
 
 <script src="d3.min.js"></script>
 <script>
@@ -35,41 +40,52 @@ Metrics:
 var keys = ["dev01","dev02","dev03","dev04","dev05",
 	"dev06","dev07","dev08","dev09","dev10"];
 
-var svg = d3.select("svg"),
-    margin = {top: 20, right: 20, bottom: 30, left: 50},
-    width = svg.attr("width") - margin.left - margin.right,
-    height = svg.attr("height") - margin.top - margin.bottom;
+var metrics = ["signal_quality", "wwan", "wlan2g", "wlan5g", "clients"];
 
-var x = d3.scaleTime().range([0, width]),
-    y = d3.scaleLinear().range([height, 0]),
-    z = d3.scaleOrdinal(d3.schemeCategory10).domain(keys);
+var paneInfo = {};
 
-var line = d3.line()
-	.curve(d3.curveBasis)
-	.x(d => x(d.date))
-	.y(d => y(d.value));
+function initPane(m, i){
+	var svg = d3.select("#p"+i),
+	    margin = {top: 20, right: 20, bottom: 30, left: 50},
+	    width = svg.attr("width") - margin.left - margin.right,
+	    height = svg.attr("height") - margin.top - margin.bottom;
+	var x = d3.scaleTime().range([0, width]),
+	    y = d3.scaleLinear().range([height, 0]),
+	    z = d3.scaleOrdinal(d3.schemeCategory10).domain(keys);
 
-var g = svg.append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+	var line = d3.line()
+		.curve(d3.curveBasis)
+		.x(d => x(d.date))
+		.y(d => y(d.value));
 
-var axis_x = g.append("g")
-	.attr("class", "axis axis--x")
-	.attr("transform", "translate(0," + height + ")")
-	.call(d3.axisBottom(x));
+	var g = svg.append("g")
+	    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-var axis_y = g.append("g");@p:
-	.attr("class", "axis axis--y")
-	.call(d3.axisLeft(y).ticks(10, "%"));
+	var axis_x = g.append("g")
+		.attr("class", "axis axis--x")
+		.attr("transform", "translate(0," + height + ")")
+		.call(d3.axisBottom(x));
+
+	var axis_y = g.append("g")
+		.attr("class", "axis axis--y")
+		.call(d3.axisLeft(y).ticks(10, "%"));
+	
+	paneInfo[m] = {
+		"svg":svg, "x":x, "y":y, "z":z, "line":line, "g":g, "axis_x":axis_x, "axis_y":axis_y
+	}
+}
+
+metrics.map((m,i) => initPane(m, i));
 
 function refresh(){
 	var day = parseInt(document.day.field.value);
-	var metrics = document.metrics.field.value;
-	
 	var filename = "cfjs2017_2017-09-"+("00"+day).slice(-2)+".json";
 	
 	d3.text(filename, function(err, res){
 		if(err){
-			g.selectAll(".line").data([]).exit().remove();
+			metrics.forEach(m=>
+				paneInfo[m].g.selectAll(".line").data([]).exit().remove()
+			);
 			return;
 		}
 		
@@ -78,69 +94,74 @@ function refresh(){
 			var d = new Object();
 			d.date = d3.isoParse(o["@timestamp"]);
 			keys.forEach(function(k){
-				d[k] = null;
-				if(!o[k]){ return; }
-				if(metrics == "signal_quality"){
-					if(o[k]["dialup_device"] && o[k]["dialup_device"]["signal_quality"]){
-						d[k] = o[k]["dialup_device"]["signal_quality"] / 100.0;
-					}
-				}else if(metrics == "wwan"){
-					if(o[k]["interface"] && o[k]["interface"]["wwan0"]
-							&& o[k]["interface"]["wwan0"]["in_octets"]){
-						d[k] = o[k]["interface"]["wwan0"]["in_octets"] + o[k]["interface"]["wwan0"]["out_octets"];
-					}
-				}else if(metrics == "wlan2g"){
-					if(o[k]["wlan_air_time_occupancy"] && o[k]["wlan_air_time_occupancy"]["2g"] 
-							&& o[k]["wlan_air_time_occupancy"]["2g"]["other"]){
-						d[k] = o[k]["wlan_air_time_occupancy"]["2g"]["other"] / 100.0;
-					}
-				}else if(metrics == "wlan5g"){
-					if(o[k]["wlan_air_time_occupancy"] && o[k]["wlan_air_time_occupancy"]["5g"]
-							&& o[k]["wlan_air_time_occupancy"]["5g"]["other"]){
-						d[k] = o[k]["wlan_air_time_occupancy"]["5g"]["other"] / 100.0;
-					}
-				}else if(metrics == "clients"){
-					if(o[k]["wlan_client_count"]){
-						d[k] = 0;
-						for(hz in o[k]["wlan_client_count"]){
-							for(ssid in o[k]["wlan_client_count"][hz]){
-								d[k] += o[k]["wlan_client_count"][hz][ssid];
-							}
+				d[k] = {};
+				if(o[k] && o[k]["dialup_device"] && o[k]["dialup_device"]["signal_quality"]){
+					d[k]["signal_quality"] = o[k]["dialup_device"]["signal_quality"] / 100.0;
+				}
+				if(o[k] && o[k]["interface"] && o[k]["interface"]["wwan0"]
+						&& o[k]["interface"]["wwan0"]["in_octets"]){
+					d[k]["wwan"] = o[k]["interface"]["wwan0"]["in_octets"] + o[k]["interface"]["wwan0"]["out_octets"];
+				}
+				if(o[k] && o[k]["wlan_air_time_occupancy"] && o[k]["wlan_air_time_occupancy"]["2g"] 
+						&& o[k]["wlan_air_time_occupancy"]["2g"]["other"]){
+					d[k]["wlan2g"] = o[k]["wlan_air_time_occupancy"]["2g"]["other"] / 100.0;
+				}
+				if(o[k] && o[k]["wlan_air_time_occupancy"] && o[k]["wlan_air_time_occupancy"]["5g"]
+						&& o[k]["wlan_air_time_occupancy"]["5g"]["other"]){
+					d[k]["wlan5g"] = o[k]["wlan_air_time_occupancy"]["5g"]["other"] / 100.0;
+				}
+				if(o[k] && o[k]["wlan_client_count"]){
+					d[k]["clients"] = 0;
+					for(hz in o[k]["wlan_client_count"]){
+						for(ssid in o[k]["wlan_client_count"][hz]){
+							d[k]["clients"] += o[k]["wlan_client_count"][hz][ssid];
 						}
 					}
 				}
 			});
 			return d;
 		});
-		var data = keys.map(k => ({
-			"key": k,
-			"values": ser.filter(d=>d[k]).map(d =>({
-				"date": d.date,
-				"value": d[k]
-			}))
-		}));
 		
-		var start = new Date(2017, 8, day);
-		x.domain([start, new Date(start.valueOf()+24*60*60*1000)]);
-		axis_x.call(d3.axisBottom(x));
-		if(metrics == "signal_quality"){
-			y.domain([0, 1]);
-			axis_y.call(d3.axisLeft(y).ticks(10, "%"));
-		} else if (metrics == "wlan2g" || metrics == "wlan5g"){
-			y.domain([0, 0.2]);
-			axis_y.call(d3.axisLeft(y).ticks(10, "%"));
-		} else {
-			y.domain([d3.min(data, c=>d3.min(c.values.filter(e=>e.value), d=>d.value)),
-				d3.max(data, c=>d3.max(c.values.filter(e=>e.value), d=>d.value))]);
-			axis_y.call(d3.axisLeft(y).ticks(10, "s"));
-		}
-		
-		var layer = g.selectAll(".line")
-			.data(data)
-			.style("stroke", d=>z(d.key)).attr("d", d=>line(d.values));
-		layer.enter().append("path").attr("class", "line")
-			.style("stroke", d=>z(d.key)).attr("d", d=>line(d.values));
-		layer.exit().remove();
+		metrics.forEach(function(m){
+			var data = keys.map(k => ({
+				"key": k,
+				"values": ser.filter(d=>d[k] && d[k][m]).map(d =>({
+					"date": d.date,
+					"value": d[k][m]
+				}))
+			}));
+			
+			var x = paneInfo[m].x,
+			    y = paneInfo[m].y,
+			    z = paneInfo[m].z,
+			    axis_x = paneInfo[m].axis_x,
+			    axis_y = paneInfo[m].axis_y,
+			    line = paneInfo[m].line,
+			    g = paneInfo[m].g;
+			
+			var start = new Date(2017, 8, day); // September is 8
+			x.domain([start, new Date(start.valueOf()+24*60*60*1000)]);
+			axis_x.call(d3.axisBottom(x));
+			if(m == "signal_quality"){
+				y.domain([0, 1]);
+				axis_y.call(d3.axisLeft(y).ticks(10, "%"));
+			} else if (m == "wlan2g" || metrics == "wlan5g"){
+				y.domain([0, 0.2]);
+				axis_y.call(d3.axisLeft(y).ticks(10, "%"));
+			} else {
+				y.domain([d3.min(data, c=>d3.min(c.values.filter(e=>e.value), d=>d.value)),
+					d3.max(data, c=>d3.max(c.values.filter(e=>e.value), d=>d.value))]);
+				axis_y.call(d3.axisLeft(y).ticks(10, "s"));
+			}
+			
+			var layer = g.selectAll(".line")
+				.data(data)
+				.style("stroke", d=>z(d.key)).attr("d", d=>line(d.values));
+			layer.enter().append("path").attr("class", "line")
+				.style("stroke", d=>z(d.key)).attr("d", d=>line(d.values));
+			layer.exit().remove();
+		});
 	});
 }
+refresh();
 </script>
