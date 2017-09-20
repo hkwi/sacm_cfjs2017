@@ -1,8 +1,19 @@
 <div>
-signal_quality <a href="#" onclick="hook_load(17,'signal_quality')">17</a>, <a href="#" onclick="hook_load(19,'signal_quality')">19</a> /
-wwan <a href="#" onclick="hook_load(17,'wwan')">17</a>, <a href="#" onclick="hook_load(19,'wwan')">19</a> /
-wlan2g <a href="#" onclick="hook_load(17,'wlan2g')">17</a>, <a href="#" onclick="hook_load(19,'wlan2g')">19</a> /
-wlan5g <a href="#" onclick="hook_load(17,'wlan5g')">17</a>, <a href="#" onclick="hook_load(19,'wlan5g')">19</a> /
+Day:<select id="day" onchange="refresh()">
+<option value="17">17</option>
+<option value="18">18</option>
+<option value="19">19</option>
+<option value="20">20</option>
+<option value="21">21</option>
+<option value="22">22</option>
+<option value="23" selected>23</option>
+<option value="24">24</option>
+</select>
+
+<a href="#" onclick="set_metrics('signal_quality')">signal_quality</a>
+<a href="#" onclick="set_metrics('wwan')">wwan</a>
+<a href="#" onclick="set_metrics('wlan2g')">wlan2g</a>
+<a href="#" onclick="set_metrics('wlan5g')">wlan5g</a>
 </div>
 
 <style>
@@ -47,24 +58,48 @@ var axis_y = g.append("g")
 	.attr("class", "axis axis--y")
 	.call(d3.axisLeft(y).ticks(10, "%"));
 
-function hook_load(day, metrics){
+var metrics = "signal_quality";
+
+function set_metrics(op){
+	metrics = op;
+	refresh();
+}
+
+function refresh(){
+	var day = parseInt(document.getElementById("day").value);
+	
 	var filename = "cfjs2017_2017-09-"+("00"+day).slice(-2)+".json";
 	
 	d3.text(filename, function(err, res){
+		if(err){
+			g.selectAll(".line").data([]).exit().remove();
+			return;
+		}
+		
 		var ser = res.split("\n").filter(l => l.length > 0).map(function(s){
 			var o = JSON.parse(s);
 			var d = new Object();
 			d.date = d3.isoParse(o["@timestamp"]);
 			keys.forEach(function(k){
 				d[k] = null;
-				if(o[k]){
-					if(metrics == "signal_quality"){
+				if(!o[k]){ return; }
+				if(metrics == "signal_quality"){
+					if(o[k]["dialup_device"] && o[k]["dialup_device"]["signal_quality"]){
 						d[k] = o[k]["dialup_device"]["signal_quality"] / 100.0;
-					}else if(metrics == "wwan"){
+					}
+				}else if(metrics == "wwan"){
+					if(o[k]["interface"] && o[k]["interface"]["wwan0"]
+							&& o[k]["interface"]["wwan0"]["in_octets"]){
 						d[k] = o[k]["interface"]["wwan0"]["in_octets"] + o[k]["interface"]["wwan0"]["out_octets"];
-					}else if(metrics == "wlan2g"){
+					}
+				}else if(metrics == "wlan2g"){
+					if(o[k]["wlan_air_time_occupancy"] && o[k]["wlan_air_time_occupancy"]["2g"] 
+							&& o[k]["wlan_air_time_occupancy"]["2g"]["other"]){
 						d[k] = o[k]["wlan_air_time_occupancy"]["2g"]["other"] / 100.0;
-					}else if(metrics == "wlan5g"){
+					}
+				}else if(metrics == "wlan5g"){
+					if(o[k]["wlan_air_time_occupancy"] && o[k]["wlan_air_time_occupancy"]["5g"]
+							&& o[k]["wlan_air_time_occupancy"]["5g"]["other"]){
 						d[k] = o[k]["wlan_air_time_occupancy"]["5g"]["other"] / 100.0;
 					}
 				}
@@ -73,7 +108,7 @@ function hook_load(day, metrics){
 		});
 		var data = keys.map(k => ({
 			"key": k,
-			"values": ser.map(d =>({
+			"values": ser.filter(d=>d[k]).map(d =>({
 				"date": d.date,
 				"value": d[k]
 			}))
@@ -89,8 +124,6 @@ function hook_load(day, metrics){
 			y.domain([0, 0.2]);
 			axis_y.call(d3.axisLeft(y).ticks(10, "%"));
 		} else {
-			console.log([d3.min(data, c=>d3.min(c.values.filter(e=>e.value), d=>d.value)),
-				d3.max(data, c=>d3.max(c.values.filter(e=>e.value), d=>d.value))]);
 			y.domain([d3.min(data, c=>d3.min(c.values.filter(e=>e.value), d=>d.value)),
 				d3.max(data, c=>d3.max(c.values.filter(e=>e.value), d=>d.value))]);
 			axis_y.call(d3.axisLeft(y).ticks(10, "s"));
