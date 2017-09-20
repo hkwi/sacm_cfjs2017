@@ -1,20 +1,23 @@
-<div>
-Day:<select id="day" onchange="refresh()">
-<option value="17">17</option>
-<option value="18">18</option>
-<option value="19">19</option>
-<option value="20">20</option>
-<option value="21">21</option>
-<option value="22">22</option>
-<option value="23" selected>23</option>
-<option value="24">24</option>
-</select>
+<form name="day" onchange="refresh()">
+Day: 2017-09- /
+<input type="radio" name="field" value="17">17</input>
+<input type="radio" name="field" value="18">18</input>
+<input type="radio" name="field" value="19">19</input>
+<input type="radio" name="field" value="20">20</input>
+<input type="radio" name="field" value="21">21</input>
+<input type="radio" name="field" value="22">22</input>
+<input type="radio" name="field" value="23" checked>23</input>
+<input type="radio" name="field" value="24">24</input>
+</form>
 
-<a href="#" onclick="set_metrics('signal_quality')">signal_quality</a>
-<a href="#" onclick="set_metrics('wwan')">wwan</a>
-<a href="#" onclick="set_metrics('wlan2g')">wlan2g</a>
-<a href="#" onclick="set_metrics('wlan5g')">wlan5g</a>
-</div>
+<form name="metrics" onchange="refresh()">
+Metrics: 
+<input type="radio" name="field" value="wwan" checked>wwan</input>
+<input type="radio" name="field" value="signal_quality">signal_quality</input>
+<input type="radio" name="field" value="wlan2g">wlan2g</input>
+<input type="radio" name="field" value="wlan5g">wlan5g</input>
+<input type="radio" name="field" value="clients">clients</input>
+</form>
 
 <style>
 .line {
@@ -54,19 +57,13 @@ var axis_x = g.append("g")
 	.attr("transform", "translate(0," + height + ")")
 	.call(d3.axisBottom(x));
 
-var axis_y = g.append("g")
+var axis_y = g.append("g");@p:
 	.attr("class", "axis axis--y")
 	.call(d3.axisLeft(y).ticks(10, "%"));
 
-var metrics = "signal_quality";
-
-function set_metrics(op){
-	metrics = op;
-	refresh();
-}
-
 function refresh(){
-	var day = parseInt(document.getElementById("day").value);
+	var day = parseInt(document.day.field.value);
+	var metrics = document.metrics.field.value;
 	
 	var filename = "cfjs2017_2017-09-"+("00"+day).slice(-2)+".json";
 	
@@ -101,6 +98,15 @@ function refresh(){
 					if(o[k]["wlan_air_time_occupancy"] && o[k]["wlan_air_time_occupancy"]["5g"]
 							&& o[k]["wlan_air_time_occupancy"]["5g"]["other"]){
 						d[k] = o[k]["wlan_air_time_occupancy"]["5g"]["other"] / 100.0;
+					}
+				}else if(metrics == "clients"){
+					if(o[k]["wlan_client_count"]){
+						d[k] = 0;
+						for(hz in o[k]["wlan_client_count"]){
+							for(ssid in o[k]["wlan_client_count"][hz]){
+								d[k] += o[k]["wlan_client_count"][hz][ssid];
+							}
+						}
 					}
 				}
 			});
