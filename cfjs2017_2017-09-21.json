@@ -154,3 +154,4 @@
 {"@timestamp": "2017-09-21T14:35:07.946219"}
 {"@timestamp": "2017-09-21T14:43:55.090922"}
 {"@timestamp": "2017-09-21T14:49:03.682335", "dev02": {"dialup_device": {"last_reset": 364.0, "signal_quality": 88.71}, "interface": {"wwan0": {"colls": 0, "ierrs": 0, "in_drops": 0, "in_octets": 31403, "in_unknown_protos": 0, "ipkts": 101, "oerrs": 0, "opkts": 92, "out_discards": 3, "out_octets": 30272}}}}
+{"@timestamp": "2017-09-21T14:54:11.717259"}
