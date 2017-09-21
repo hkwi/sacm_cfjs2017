@@ -1,28 +1,31 @@
-<form name="day" onchange="refresh()">
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8"/></head>
+
+<h1>Code for Japan SUMMIT 2017 会場無線 モニタ</h1>
+
+<form name="control" onchange="refresh()">
 Day: 2017-09- /
-<input type="radio" name="field" value="17">17</input>
-<input type="radio" name="field" value="18">18</input>
-<input type="radio" name="field" value="19">19</input>
-<input type="radio" name="field" value="20">20</input>
-<input type="radio" name="field" value="21">21</input>
-<input type="radio" name="field" value="22">22</input>
-<input type="radio" name="field" value="23" checked>23</input>
-<input type="radio" name="field" value="24">24</input>
+<label><input type="radio" name="field" value="17">17</input></label>
+<label><input type="radio" name="field" value="18">18</input></label>
+<label><input type="radio" name="field" value="19">19</input></label>
+<label><input type="radio" name="field" value="20">20</input></label>
+<label><input type="radio" name="field" value="21">21</input></label>
+<label><input type="radio" name="field" value="22">22</input></label>
+<label><input type="radio" name="field" value="23" checked>23</input></label>
+<label><input type="radio" name="field" value="24">24</input></label>
+ / 
+<label><input type="checkbox" name="auto" checked>Auto refresh</input></label>
 </form>
 
-<table>
-<tr>
-	<td><svg height="300" width="700" id="p0"></svg></td>
-	<td><svg height="300" width="700" id="p1"></svg></td>
-</tr>
-<tr>
-	<td><svg height="300" width="700" id="p2"></svg></td>
-	<td><svg height="300" width="700" id="p3"></svg></td>
-</tr>
-<tr>
-	<td><svg height="300" width="700" id="p4"></svg></td>
-	<td><svg height="300" width="700" id="p5"></svg></td>
-</tr>
+
+<div style="float:left">携帯電波<br/><svg height="300" width="700" id="p0"></svg></div>
+<div style="float:left">携帯通信量<br/><svg height="300" width="700" id="p1"></svg></div>
+<div style="float:left">2.4GHz品質<br/><svg height="300" width="700" id="p2"></svg></div>
+<div style="float:left">5GHz品質<br/><svg height="300" width="700" id="p3"></svg></div>
+<div style="float:left">端末数<br/><svg height="300" width="700" id="p4"></svg></div>
+<div style="float:left; padding:30" id="legend"></div>
+<div style="float:left; padding:30" id="now"></div>
 </table>
 
 <style>
@@ -42,6 +45,13 @@ var keys = ["dev01","dev02","dev03","dev04","dev05",
 
 var metrics = ["signal_quality", "wwan", "wlan2g", "wlan5g", "clients"];
 
+var z = d3.scaleOrdinal(d3.schemeCategory10).domain(keys);
+
+keys.forEach(function(k){
+	var sp = d3.selectAll("#legend").append("span");
+	sp.html('<span style="padding:2px; background-color:' + z(k) + '">'+k+'</span> ');
+});
+
 var paneInfo = {};
 
 function initPane(m, i){
@@ -49,18 +59,18 @@ function initPane(m, i){
 	    margin = {top: 20, right: 20, bottom: 30, left: 50},
 	    width = svg.attr("width") - margin.left - margin.right,
 	    height = svg.attr("height") - margin.top - margin.bottom;
+	
 	var x = d3.scaleTime().range([0, width]),
-	    y = d3.scaleLinear().range([height, 0]),
-	    z = d3.scaleOrdinal(d3.schemeCategory10).domain(keys);
+	    y = d3.scaleLinear().range([height, 0]);
 
 	var line = d3.line()
 		.curve(d3.curveBasis)
 		.x(d => x(d.date))
 		.y(d => y(d.value));
-
+	
 	var g = svg.append("g")
 	    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
+	
 	var axis_x = g.append("g")
 		.attr("class", "axis axis--x")
 		.attr("transform", "translate(0," + height + ")")
@@ -71,16 +81,17 @@ function initPane(m, i){
 		.call(d3.axisLeft(y).ticks(10, "%"));
 	
 	paneInfo[m] = {
-		"svg":svg, "x":x, "y":y, "z":z, "line":line, "g":g, "axis_x":axis_x, "axis_y":axis_y
+		"svg":svg, "x":x, "y":y, "line":line, "g":g, "axis_x":axis_x, "axis_y":axis_y
 	}
 }
 
 metrics.map((m,i) => initPane(m, i));
 
 function refresh(){
-	var day = parseInt(document.day.field.value);
+	var day = parseInt(document.control.field.value);
 	var filename = "cfjs2017_2017-09-"+("00"+day).slice(-2)+".json";
 	
+	d3.select("#now").html(new Date());
 	d3.text(filename, function(err, res){
 		if(err){
 			metrics.forEach(m=>
@@ -133,7 +144,6 @@ function refresh(){
 			
 			var x = paneInfo[m].x,
 			    y = paneInfo[m].y,
-			    z = paneInfo[m].z,
 			    axis_x = paneInfo[m].axis_x,
 			    axis_y = paneInfo[m].axis_y,
 			    line = paneInfo[m].line,
@@ -162,6 +172,11 @@ function refresh(){
 			layer.exit().remove();
 		});
 	});
+	if(document.control.auto.checked){
+		setTimeout(refresh, 300*1000);
+
+	}
 }
 refresh();
 </script>
+</html>
