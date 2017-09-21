@@ -164,3 +164,4 @@
 {"@timestamp": "2017-09-21T15:34:50.363688", "dev06": {"dialup_device": {"last_reset": 604.0, "signal_quality": 77.42}, "interface": {"wwan0": {"colls": 0, "ierrs": 0, "in_drops": 0, "in_octets": 282683, "in_unknown_protos": 0, "ipkts": 447, "oerrs": 0, "opkts": 372, "out_discards": 3, "out_octets": 100919}}}}
 {"@timestamp": "2017-09-21T15:35:19.376568"}
 {"@timestamp": "2017-09-21T15:39:11.562386"}
+{"@timestamp": "2017-09-21T15:40:07.826476"}
