@@ -88,10 +88,14 @@ function initPane(m, i){
 metrics.map((m,i) => initPane(m, i));
 
 function refresh(){
+	var now = new Date();
 	var day = parseInt(document.control.field.value);
 	var filename = "cfjs2017_2017-09-"+("00"+day).slice(-2)+".json";
+	if(document.location.protocol.slice(0, 4)=="http"){
+		filename += "?tm="+now.getTime();
+	}
 	
-	d3.select("#now").html(new Date());
+	d3.select("#now").html(now);
 	d3.text(filename, function(err, res){
 		if(err){
 			metrics.forEach(m=>
