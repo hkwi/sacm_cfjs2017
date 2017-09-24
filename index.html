@@ -24,6 +24,7 @@ Day: 2017-09-(
 <div style="float:left">2.4GHz外来波<br/><svg height="300" width="700" id="p2"></svg></div>
 <div style="float:left">5GHz外来波<br/><svg height="300" width="700" id="p3"></svg></div>
 <div style="float:left">端末数<br/><svg height="300" width="700" id="p4"></svg></div>
+<div style="float:left">Wi-Fi通信量<br/><svg height="300" width="700" id="p5"></svg></div>
 <div style="float:left; padding:30px" id="legend"></div>
 <div style="float:left; padding:30px" id="now"></div>
 </table>
@@ -43,7 +44,7 @@ Day: 2017-09-(
 var keys = ["dev01","dev02","dev03","dev04","dev05",
 	"dev06","dev07","dev08","dev09","dev10"];
 
-var metrics = ["signal_quality", "wwan", "wlan2g", "wlan5g", "clients"];
+var metrics = ["signal_quality", "wwan", "wlan2g", "wlan5g", "clients", "wlan"];
 
 var z = d3.scaleOrdinal(d3.schemeCategory10).domain(keys);
 
@@ -116,6 +117,22 @@ function refresh(){
 				if(o[k] && o[k]["interface"] && o[k]["interface"]["wwan0"]
 						&& o[k]["interface"]["wwan0"]["in_octets"]){
 					d[k]["wwan"] = o[k]["interface"]["wwan0"]["in_octets"] + o[k]["interface"]["wwan0"]["out_octets"];
+				}
+				if(o[k] && o[k]["interface"] && o[k]["interface"]["wlan0"]
+						&& o[k]["interface"]["wlan0"]["in_octets"]){
+					d[k]["wlan"] = o[k]["interface"]["wlan0"]["in_octets"] + o[k]["interface"]["wlan0"]["out_octets"];
+				}
+				if(o[k] && o[k]["interface"] && o[k]["interface"]["wlan1"]
+						&& o[k]["interface"]["wlan1"]["in_octets"]){
+					d[k]["wlan"] = o[k]["interface"]["wlan1"]["in_octets"] + o[k]["interface"]["wlan1"]["out_octets"];
+				}
+				if(o[k] && o[k]["interface"] && o[k]["interface"]["wlan4"]
+						&& o[k]["interface"]["wlan4"]["in_octets"]){
+					d[k]["wlan"] = o[k]["interface"]["wlan4"]["in_octets"] + o[k]["interface"]["wlan4"]["out_octets"];
+				}
+				if(o[k] && o[k]["interface"] && o[k]["interface"]["wlan5"]
+						&& o[k]["interface"]["wlan5"]["in_octets"]){
+					d[k]["wlan"] = o[k]["interface"]["wlan5"]["in_octets"] + o[k]["interface"]["wlan5"]["out_octets"];
 				}
 				if(o[k] && o[k]["wlan_air_time_occupancy"] && o[k]["wlan_air_time_occupancy"]["2g"] 
 						&& o[k]["wlan_air_time_occupancy"]["2g"]["other"]){
