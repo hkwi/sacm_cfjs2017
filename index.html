@@ -118,21 +118,13 @@ function refresh(){
 						&& o[k]["interface"]["wwan0"]["in_octets"]){
 					d[k]["wwan"] = o[k]["interface"]["wwan0"]["in_octets"] + o[k]["interface"]["wwan0"]["out_octets"];
 				}
-				if(o[k] && o[k]["interface"] && o[k]["interface"]["wlan0"]
-						&& o[k]["interface"]["wlan0"]["in_octets"]){
-					d[k]["wlan"] = o[k]["interface"]["wlan0"]["in_octets"] + o[k]["interface"]["wlan0"]["out_octets"];
-				}
-				if(o[k] && o[k]["interface"] && o[k]["interface"]["wlan1"]
-						&& o[k]["interface"]["wlan1"]["in_octets"]){
-					d[k]["wlan"] = o[k]["interface"]["wlan1"]["in_octets"] + o[k]["interface"]["wlan1"]["out_octets"];
-				}
-				if(o[k] && o[k]["interface"] && o[k]["interface"]["wlan4"]
-						&& o[k]["interface"]["wlan4"]["in_octets"]){
-					d[k]["wlan"] = o[k]["interface"]["wlan4"]["in_octets"] + o[k]["interface"]["wlan4"]["out_octets"];
-				}
-				if(o[k] && o[k]["interface"] && o[k]["interface"]["wlan5"]
-						&& o[k]["interface"]["wlan5"]["in_octets"]){
-					d[k]["wlan"] = o[k]["interface"]["wlan5"]["in_octets"] + o[k]["interface"]["wlan5"]["out_octets"];
+				d[k]["wlan"] = 0;
+				for(wlan of ["wlan0","wlan1","wlan2","wlan3","wlan4","wlan5","wlan6","wlan7"]){
+					console.log(wlan);
+					if(o[k] && o[k]["interface"] && o[k]["interface"][wlan]
+							&& o[k]["interface"][wlan]["in_octets"]){
+						d[k]["wlan"] += o[k]["interface"][wlan]["in_octets"] + o[k]["interface"][wlan]["out_octets"];
+					}
 				}
 				if(o[k] && o[k]["wlan_air_time_occupancy"] && o[k]["wlan_air_time_occupancy"]["2g"] 
 						&& o[k]["wlan_air_time_occupancy"]["2g"]["other"]){
