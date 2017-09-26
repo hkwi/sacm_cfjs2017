@@ -101,4 +101,4 @@ SIM カードを入れ替えることも考えたけれど、現場ではリス�
 
 データは CC-BY で[公開](https://github.com/hkwi/sacm_cfjs2017) しているので、分析して楽しんでみていただけると、ありがたいです。
 
-Special thanks to 田中さん＠COPLI for もろもろ神戸地元の調査・調整ごと !!
+Special thanks to 田中さん＠COPLI for もろもろ神戸地元の調査・調整ごと＆IIJmioクーポン調達などなど !!
