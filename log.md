@@ -27,7 +27,7 @@ Code for Japan SUMMIT 2016 の[実績値は 650 人](https://medium.com/code-for
     [NTT DOCOMO Wi-Fi STATION N-01J](https://www.nttdocomo.co.jp/product/data/n01j/)
   - [IIJmio プリペイドパック](https://s.iijmio.jp/prepaid/)
 
-明らかに普通じゃないです。たぶん昨今普通の構成はフレッツ上流の Wireless Controller 制御の Wi-Fi AP 群でしょう。この構成になった一番の理由は、上流回線に有線が引けなかったためです。Wireless Controller を使う場合と比べて、電波環境に対して AP 群全体で自動調節機能がない、ローミングがシームレスには行われない、といったデメリットは存在します。ただ、電源を入れるだけでデプロイが完了するのは大きなメリット。設営・撤収時間も限られていたので、有線 LAN ケーブル敷設が必要ないのは大変助かります。
+明らかに普通じゃないです。たぶん昨今普通の構成はフレッツ上流の Wireless Controller 制御の Wi-Fi AP 群でしょう。この構成になった一番の理由は、上流回線に有線が引けなかったためです。Wireless Controller を使う場合と比べて、電波環境に対して AP 群全体で自動調節機能がない、ローミングがシームレスには行われない、といったデメリットは存在します。ただ、電源を入れるだけでデプロイが完了するのは大きなメリット。設営・撤収時間も限られていたので、有線 LAN ケーブル敷設が必要ないのは大変助かります。（参考:[Rubykaigi 2017](https://diary.sorah.jp/2017/09/25/rubykaigi2017-wifi)）
 
 会場全体の Wi-Fi の認証情報は基本的に共通設定にして、スポットで使用するものは隔離するようにしました。
 
