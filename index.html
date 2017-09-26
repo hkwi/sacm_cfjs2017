@@ -15,7 +15,7 @@ Day: 2017-09-(
 <label><input type="radio" name="field" value="23">23</input></label>
 <label><input type="radio" name="field" value="24" checked>24</input></label>)
  / 
-<label><input type="checkbox" name="auto" checked>Auto refresh</input></label>
+<label><input type="checkbox" name="auto">Auto refresh</input></label>
 </form>
 
 
@@ -120,7 +120,6 @@ function refresh(){
 				}
 				d[k]["wlan"] = 0;
 				for(wlan of ["wlan0","wlan1","wlan2","wlan3","wlan4","wlan5","wlan6","wlan7"]){
-					console.log(wlan);
 					if(o[k] && o[k]["interface"] && o[k]["interface"][wlan]
 							&& o[k]["interface"][wlan]["in_octets"]){
 						d[k]["wlan"] += o[k]["interface"][wlan]["in_octets"] + o[k]["interface"][wlan]["out_octets"];
