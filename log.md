@@ -73,6 +73,16 @@ Code for Japan SUMMIT 2016 の[実績値は 650 人](https://medium.com/code-for
 
 ![Deploy1](https://docs.google.com/drawings/d/e/2PACX-1vRECx3AqPfrAz4BgBkgOz_h_yudsKqkTSmuRsrnXJkhatij2ZKAc7iGaQttKTXEkjLpXIrKopxa_RU1/pub?w=480&h=360)
 
+グラフから消費量を読み取る。受け付けまわり意外と使わないのね。
+
+|消費量|AP|
+|:--|:--|
+|10G|dev07, dev08|
+|6G|dev03|
+|5.5G|dev09|
+|5G|dev01, dev02|
+|1.5G|dev04, dev05, dev06|
+
 二日目には、ローテーションをかけながらこんな割り当てにしました。大会議室からホールに一台移動して強化。
 
 ![Deploy2](https://docs.google.com/drawings/d/e/2PACX-1vQcMYnPbOlryq3eHxsAJ3PLnEfoBPqESO30e0PYmfVEFVDHNHEWPeisYrXcJvSk8Ut-4DZG5ShWufZU/pub?w=480&h=360)
