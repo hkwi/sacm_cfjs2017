@@ -23,7 +23,7 @@ Code for Japan SUMMIT 2016 の[実績値は 650 人](https://medium.com/code-for
   - [IIJ mobile タイプD 定額プランL](https://www.iij.ad.jp/biz/iijmobile/plan_l/plan.html) 
   - [IIJ mobile 端末レンタル UX312NC](https://www.iijmobile.jp/product/type_d/card_UX312NC.html)
 - ポケット Wi-Fi（x4）
-  - [NTT DOCOMO Wi-Fi STATION N-01H](https://www.nttdocomo.co.jp/product/data/n01h/) /
+  - [NTT DOCOMO Wi-Fi STATION N-01H](https://www.nttdocomo.co.jp/support/trouble/data/n01h/) /
     [NTT DOCOMO Wi-Fi STATION N-01J](https://www.nttdocomo.co.jp/product/data/n01j/)
   - [IIJmio プリペイドパック](https://s.iijmio.jp/prepaid/)
 
